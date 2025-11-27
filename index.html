@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的生活剪影</title>
+    <style>
+        /* --- 基础样式 --- */
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* --- 头部样式 --- */
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        header h1 {
+            margin: 0;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        header p {
+            color: #777;
+            margin-top: 10px;
+        }
+
+        /* --- 相册网格布局 --- */
+        .gallery-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            /* 响应式网格：列宽至少300px，自动填满 */
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .photo-card {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.15);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover; /* 保证图片填满方格且不变形 */
+            display: block;
+        }
+
+        .photo-info {
+            padding: 15px;
+            text-align: center;
+        }
+        .photo-info p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* --- 底部样式 --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 12px;
+            margin-top: 40px;
+        }
+
+        /* --- 灯箱（点击放大）效果样式 --- */
+        .lightbox {
+            display: none; /* 默认隐藏 */
+            position: fixed;
+            z-index: 1000;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+        }
+
+        .lightbox-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 900px;
+            max-height: 80vh;
+            object-fit: contain;
+            animation-name: zoom;
+            animation-duration: 0.6s;
+        }
+
+        .close {
+            position: absolute;
+            top: 30px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        @keyframes zoom {
+            from {transform:scale(0)} 
+            to {transform:scale(1)}
+        }
+
+        /* 手机端适配 */
+        @media only screen and (max-width: 700px){
+            .lightbox-content {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 头部区域 -->
+    <header>
+        <h1>我的生活碎片</h1>
+        <p>记录每一个闪光的瞬间</p>
+    </header>
+
+    <!-- 相册区域 -->
+    <div class="gallery-container">
+        
+        <!-- 照片 1 (你需要修改 src 中的图片路径) -->
+        <div class="photo-card" onclick="openLightbox(this)">
+            <!-- 为了演示，我这里使用了网络占位图，请将其换成你的 images/photo1.jpg -->
+            <img src="images/photo1.jpg" alt="旅行日记">
+            <div class="photo-info"><p>图片1</p></div>
+        </div>
+
+        <!-- 照片 2 -->
+        <div class="photo-card" onclick="openLightbox(this)">
+            <img src="images/photo2.jpg" alt="清晨风景">
+            <div class="photo-info"><p>图片2</p></div>
+        </div>
+
+        <!-- 照片 3 -->
+        <div class="photo-card" onclick="openLightbox(this)">
+            <img src="images/photo3.jpg" alt="街头摄影">
+            <div class="photo-info"><p>图片3</p></div>
+        </div>
+
+         <!-- 照片 4 -->
+         <div class="photo-card" onclick="openLightbox(this)">
+            <img src="images/photo4.jpg" alt="咖啡时光">
+            <div class="photo-info"><p>图片4</p></div>
+        </div>
+
+        <!-- 你可以复制上面的 div 块来添加更多照片 -->
+
+    </div>
+
+    <!-- 底部区域 -->
+    <footer>
+        <p>&copy; 2023 我的个人主页. Built with Simple Code.</p>
+    </footer>
+
+    <!-- 灯箱结构 (查看大图用) -->
+    <div id="myLightbox" class="lightbox">
+        <span class="close" onclick="closeLightbox()">&times;</span>
+        <img class="lightbox-content" id="img01">
+    </div>
+
+    <script>
+        // 打开灯箱
+        function openLightbox(element) {
+            var modal = document.getElementById("myLightbox");
+            var modalImg = document.getElementById("img01");
+            // 获取点击卡片内部的 img 标签
+            var img = element.querySelector('img');
+            
+            modal.style.display = "block";
+            modalImg.src = img.src;
+        }
+
+        // 关闭灯箱
+        function closeLightbox() {
+            var modal = document.getElementById("myLightbox");
+            modal.style.display = "none";
+        }
+
+        // 点击背景也可以关闭
+        document.getElementById('myLightbox').addEventListener('click', function(e){
+            if(e.target === this){
+                closeLightbox();
+            }
+        });
+    </script>
+
+</body>
+</html>
